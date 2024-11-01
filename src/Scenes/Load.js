@@ -17,6 +17,7 @@ class Load extends Phaser.Scene {
         this.load.image("ampNoodle", "singular amp noodle.png");
         this.load.image("stringhetti", "stringhetti.png");
 
+        this.load.setPath("./Assets/Sounds/");
 
         // -- Audio --
         // Flute sfx
@@ -40,7 +41,7 @@ class Load extends Phaser.Scene {
 
     create() {
         // Put the game scene here
-        // this.scene.start("Lv1Scene");
+        this.scene.start("MainScene");
     }
 
 }
