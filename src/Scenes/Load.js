@@ -6,6 +6,9 @@ class Load extends Phaser.Scene {
     preload() {
         this.load.setPath("./Assets/");
 
+        // Background Image
+        this.load.image("BGimg", "Background.png");
+
         // Sprites
         // Guitar sprites
         this.load.image("guitarDefault", "eGuitarStill.png");
