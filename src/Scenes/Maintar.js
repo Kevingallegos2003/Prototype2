@@ -56,21 +56,30 @@ class Maintar extends Phaser.Scene {
 
         // -- Draggable Food Items --
         for(let i = 0; i < this.FoodArray.length; i++){
-            this.FoodArray[i].on('drag', (pointer, dragX, dragY) => {
-                    // Ensure the player has enough currency to drag
-                    if(this.foodStats[i].cost <= this.currency){
-                        this.click = true;
-                        this.FoodArray[i].x = dragX;
-                        this.FoodArray[i].y = dragY
-                        //console.log(this.FoodArray[i].x,this.FoodArray[i].y);
-                    }
-                });
+            // Ensure the player has enough currency to drag
+            
+            // Play a sound when picking up item
+            this.FoodArray[i].on('pointerdown', ()=>{
+                if(this.foodStats[i].cost <= this.currency){
+                    this.sound.play("pop", {volume: 5});
+                }
+            });
 
-                // When the player lets go of the food
-                this.FoodArray[i].on('pointerup', () =>{
-                        console.log("unclicked");
-                        this.click = false;
-                });
+            // Logic to drag food
+            this.FoodArray[i].on('drag', (pointer, dragX, dragY) => {
+                if(this.foodStats[i].cost <= this.currency){
+                    this.click = true;
+                    this.FoodArray[i].x = dragX;
+                    this.FoodArray[i].y = dragY
+                    //console.log(this.FoodArray[i].x,this.FoodArray[i].y);
+                }
+            });
+                
+            // When the player lets go of the food
+            this.FoodArray[i].on('pointerup', () =>{
+                console.log("unclicked");
+                this.click = false;
+            });
         }
 
         // Click Guitar
@@ -91,6 +100,7 @@ class Maintar extends Phaser.Scene {
             }
         });
 
+        // Change guitar sprite to default
         my.sprite.guitar.on('pointerup', ()=>{
             // Sprite
             my.sprite.guitar2.visible = false;

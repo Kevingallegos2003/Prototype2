@@ -40,6 +40,7 @@ class Load extends Phaser.Scene {
         // Eating sfx
         this.load.audio("slurp", "slurpSFX.mp3");
         this.load.audio("crunch", "crunch.mp3");
+        this.load.audio("pop", "pop.mp3");
 
         // Consider adding "pick up food" sounds, bgm
     }
