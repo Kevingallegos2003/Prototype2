@@ -9,7 +9,7 @@ class Load extends Phaser.Scene {
         // Background Image
         this.load.image("BGimg", "Background.png");
 
-        // Sprites
+        // -- Sprites --
         // Guitar sprites
         this.load.image("guitarDefault", "eGuitarStill.png");
         this.load.image("guitarStrum", "eGuitarStrum.png");
@@ -35,9 +35,11 @@ class Load extends Phaser.Scene {
         this.load.audio("guitarRiff1", "guitarRiff1.mp3");
         this.load.audio("guitarRiff2", "guitarRiff2.mp3");
         this.load.audio("guitarRiff3", "guitarRiff3.mp3");
+        this.load.audio("guitarRiff4", "guitarRiff3.mp3");
 
-        // Eating sfc
+        // Eating sfx
         this.load.audio("slurp", "slurpSFX.mp3");
+        this.load.audio("crunch", "crunch.mp3");
 
         // Consider adding "pick up food" sounds, bgm
     }

@@ -5,12 +5,15 @@ class Maintar extends Phaser.Scene {
         this.click = false;
         this.FoodArray = [];
         this.currency = 0;
-        // Food item details
+        this.spriteScale = .3;
+        this.sfxTimerConst = 25;
+        this.sfxTimer = this.sfxTimerConst;
+        // Food items
         this.foodStats = [
-            {x: 148,  y: 518, cost: 10},
-            {x: 1158, y: 100, cost: 20},
-            {x: 1122, y: 573, cost: 30},
-            {x: 148,  y: 77,  cost: 40}]
+            {x: 175,  y: 600, cost: 10},
+            {x: 1125, y: 100, cost: 20},
+            {x: 1125, y: 575, cost: 30},
+            {x: 175,  y: 100,  cost: 40}]
     }
 
     preload(){
@@ -20,9 +23,21 @@ class Maintar extends Phaser.Scene {
     create(){
         let my = this.my;
 
+        // SFX Prep
+        let fluteSfx = ["flute1", "flute2", "flute3", "flute4", "flute5", "flute6"];
+
         // ---- Initialize Sprites ----
+        // Background
         my.sprite.bg = this.add.sprite(640, 350, "BGimg");
+
+        // Guitar
         my.sprite.guitar = this.add.sprite(640, 350, "guitarDefault").setInteractive();
+        my.sprite.guitar2 = this.add.sprite(640, 350, "guitarStrum");
+        my.sprite.guitar.setScale(this.spriteScale);
+        my.sprite.guitar2.setScale(this.spriteScale);
+        my.sprite.guitar2.visible = false;
+
+        // Food
         my.sprite.food1 = this.add.sprite(this.foodStats[0].x, this.foodStats[0].y, "jackNcheese").setInteractive({ draggable: true });
         my.sprite.food2 = this.add.sprite(this.foodStats[1].x, this.foodStats[1].y, "pickCereal" ).setInteractive({ draggable: true });
         my.sprite.food3 = this.add.sprite(this.foodStats[2].x, this.foodStats[2].y, "ampNoodle"  ).setInteractive({ draggable: true });
@@ -34,10 +49,10 @@ class Maintar extends Phaser.Scene {
 
         // Fix Scaling
         for(let i = 0; i < this.FoodArray.length; i++){
-            this.FoodArray[i].setScale(.3);
+            this.FoodArray[i].setScale(this.spriteScale);
         }
-        my.sprite.guitar.setScale(.3);
 
+        // ---------- Game Logic ----------
 
         // -- Draggable Food Items --
         for(let i = 0; i < this.FoodArray.length; i++){
@@ -51,28 +66,51 @@ class Maintar extends Phaser.Scene {
                     }
                 });
 
-                // When the player lets go of the food, (TODO: check for collision)
+                // When the player lets go of the food
                 this.FoodArray[i].on('pointerup', () =>{
                         console.log("unclicked");
                         this.click = false;
                 });
         }
 
+        // Click Guitar
         my.sprite.guitar.on('pointerdown', ()=>{
             this.currency++;
             console.log(this.currency);
+
+            // Sprite
+            my.sprite.guitar2.visible = true;
+
+            // SFX
+            // Trigger audio if timer allows
+            if (this.sfxTimer <= 0){
+                this.sfxTimer = this.sfxTimerConst;
+                // Pick random flute sound to play
+                let randSfx = Phaser.Math.Between(0, fluteSfx.length-1);
+                this.sound.play(fluteSfx[randSfx]);
+            }
+        });
+
+        my.sprite.guitar.on('pointerup', ()=>{
+            // Sprite
+            my.sprite.guitar2.visible = false;
         });
     }
 
     update(){
         let my = this.my;
+        if (this.sfxTimer > 0) { this.sfxTimer--; }
+
+        // Collision Handling
         for(let i = 0; i<this.FoodArray.length;i++){
-            // Collision Handling
             if (this.collides(my.sprite.guitar, this.FoodArray[i]) && this.click == false) {
                 console.log("this collides");
                 this.currency -= this.foodStats[i].cost;
                 this.FoodArray[i].x = this.foodStats[i].x;
                 this.FoodArray[i].y = this.foodStats[i].y;
+
+                // SFX
+                this.sound.play("slurp");
                 console.log("money left: ",this.currency);
             }
         }
