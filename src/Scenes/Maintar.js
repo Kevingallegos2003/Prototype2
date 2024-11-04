@@ -14,10 +14,10 @@ class Maintar extends Phaser.Scene {
         this.lastFood = null;
         // Food items
         this.foodStats = [
-            {x: 175,  y: 600, cost: 10, upgrade: 1},
-            {x: 1125, y: 100, cost: 20, upgrade: 3},
-            {x: 1125, y: 575, cost: 30, upgrade: 5},
-            {x: 175,  y: 100,  cost: 40, upgrade: 8}]
+            {x: 175,  y: 600, cost: 10, upgrade: 1, riff: "guitarRiff1"},
+            {x: 1125, y: 100, cost: 20, upgrade: 3, riff: "guitarRiff2"},
+            {x: 1125, y: 575, cost: 30, upgrade: 5, riff: "guitarRiff3"},
+            {x: 175,  y: 100,  cost: 40, upgrade: 8, riff: "guitarRiff4"}]
     }
 
     preload(){
@@ -122,6 +122,7 @@ class Maintar extends Phaser.Scene {
                         if (this.lastFood === this.FoodArray[i])
                         {
                             this.clickRate += this.foodStats[i].upgrade;
+                            this.sound.play(this.foodStats[i].riff);
                         }
                     }
 
