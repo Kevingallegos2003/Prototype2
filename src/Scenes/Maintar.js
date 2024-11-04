@@ -3,6 +3,7 @@ class Maintar extends Phaser.Scene {
         super("MainScene");
         this.my = {sprite: {}};
         this.click = false;
+        this.clickRate = 1;
         this.FoodArray = [];
         this.currency = 0;
         this.spriteScale = .3;
@@ -13,10 +14,10 @@ class Maintar extends Phaser.Scene {
         this.lastFood = null;
         // Food items
         this.foodStats = [
-            {x: 175,  y: 600, cost: 10},
-            {x: 1125, y: 100, cost: 20},
-            {x: 1125, y: 575, cost: 30},
-            {x: 175,  y: 100,  cost: 40}]
+            {x: 175,  y: 600, cost: 10, upgrade: 1},
+            {x: 1125, y: 100, cost: 20, upgrade: 3},
+            {x: 1125, y: 575, cost: 30, upgrade: 5},
+            {x: 175,  y: 100,  cost: 40, upgrade: 8}]
     }
 
     preload(){
@@ -89,7 +90,7 @@ class Maintar extends Phaser.Scene {
         my.sprite.guitar.on('pointerdown', ()=>{
             if (!this.isChewing)
             {
-                this.currency++;
+                this.currency += this.clickRate;
                 console.log(this.currency);
     
                 // Sprite
@@ -117,6 +118,11 @@ class Maintar extends Phaser.Scene {
                         this.FoodArray[i].y = this.foodStats[i].y;
                         this.FoodArray[i].setInteractive();
                         this.FoodArray[i].setScale(this.spriteScale);
+
+                        if (this.lastFood === this.FoodArray[i])
+                        {
+                            this.clickRate += this.foodStats[i].upgrade;
+                        }
                     }
 
                     this.lastFood = null;
