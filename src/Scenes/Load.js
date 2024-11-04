@@ -35,7 +35,7 @@ class Load extends Phaser.Scene {
         this.load.audio("guitarRiff1", "guitarRiff1.mp3");
         this.load.audio("guitarRiff2", "guitarRiff2.mp3");
         this.load.audio("guitarRiff3", "guitarRiff3.mp3");
-        this.load.audio("guitarRiff4", "guitarRiff3.mp3");
+        this.load.audio("guitarRiff4", "guitarRiff4.mp3");
 
         // Eating sfx
         this.load.audio("slurp", "slurpSFX.mp3");
