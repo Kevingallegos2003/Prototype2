@@ -8,6 +8,9 @@ class Maintar extends Phaser.Scene {
         this.spriteScale = .3;
         this.sfxTimerConst = 25;
         this.sfxTimer = this.sfxTimerConst;
+        this.isChewing = false;
+        this.chewCount = 0;
+        this.lastFood = null;
         // Food items
         this.foodStats = [
             {x: 175,  y: 600, cost: 10},
@@ -84,19 +87,42 @@ class Maintar extends Phaser.Scene {
 
         // Click Guitar
         my.sprite.guitar.on('pointerdown', ()=>{
-            this.currency++;
-            console.log(this.currency);
+            if (!this.isChewing)
+            {
+                this.currency++;
+                console.log(this.currency);
+    
+                // Sprite
+                my.sprite.guitar2.visible = true;
+    
+                // SFX
+                // Trigger audio if timer allows
+                if (this.sfxTimer <= 0){
+                    this.sfxTimer = this.sfxTimerConst;
+                    // Pick random flute sound to play
+                    let randSfx = Phaser.Math.Between(0, fluteSfx.length-1);
+                    this.sound.play(fluteSfx[randSfx]);
+                }
+            }
+            else
+            {
+                this.sound.play("crunch");
+                this.chewCount++;
+                console.log(this.chewCount + " " + this.isChewing);
+                if (this.chewCount >= 3)
+                {
+                    for (let i = 0; i < this.FoodArray.length; i++)
+                    {
+                        this.FoodArray[i].x = this.foodStats[i].x;
+                        this.FoodArray[i].y = this.foodStats[i].y;
+                        this.FoodArray[i].setInteractive();
+                        this.FoodArray[i].setScale(this.spriteScale);
+                    }
 
-            // Sprite
-            my.sprite.guitar2.visible = true;
-
-            // SFX
-            // Trigger audio if timer allows
-            if (this.sfxTimer <= 0){
-                this.sfxTimer = this.sfxTimerConst;
-                // Pick random flute sound to play
-                let randSfx = Phaser.Math.Between(0, fluteSfx.length-1);
-                this.sound.play(fluteSfx[randSfx]);
+                    this.lastFood = null;
+                    this.isChewing = false;
+                    this.chewCount = 0;
+                }
             }
         });
 
@@ -113,15 +139,25 @@ class Maintar extends Phaser.Scene {
 
         // Collision Handling
         for(let i = 0; i<this.FoodArray.length;i++){
-            if (this.collides(my.sprite.guitar, this.FoodArray[i]) && this.click == false) {
+            if (this.collides(my.sprite.guitar, this.FoodArray[i]) && this.click == false && !this.lastFood) {
                 console.log("this collides");
                 this.currency -= this.foodStats[i].cost;
                 this.FoodArray[i].x = this.foodStats[i].x;
                 this.FoodArray[i].y = this.foodStats[i].y;
+                this.lastFood = this.FoodArray[i];
 
                 // SFX
                 this.sound.play("slurp");
-                console.log("money left: ",this.currency);
+                console.log("money left: ", this.currency);
+
+                if (this.lastFood)
+                {
+                    this.isChewing = true;
+                    this.lastFood.x = my.sprite.guitar.x - 100;
+                    this.lastFood.y = my.sprite.guitar.y + 100;
+                    this.lastFood.setScale(0.1);
+                    this.lastFood.disableInteractive();
+                }
             }
         }
     }
